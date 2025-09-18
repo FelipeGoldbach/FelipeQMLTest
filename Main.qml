@@ -39,7 +39,7 @@ ApplicationWindow {
             }
         }
     }
-    
+
     Grid {
         id: tiles
 
@@ -65,7 +65,7 @@ ApplicationWindow {
         }   
     }
 
-    // 🔒 Prevent shrinking smaller than the grid + heading + margins
+    // Prevent shrinking smaller than the grid + heading + margins
     minimumWidth:  Math.ceil(tiles.implicitWidth)  + 2 * outerMargin
     minimumHeight: Math.ceil(heading.implicitHeight + vSpacing + tiles.implicitHeight) + 2 * outerMargin
 }
