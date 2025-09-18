@@ -6,47 +6,66 @@ import "./components" as Components
 
 ApplicationWindow {
     id: win
-    width: 1000
-    height: 700
+
+    width: 600
+    height: 500
     visible: true
     title: "Felipe Test QML Project"
 
-    // External model: model/ColorsModel.qml
-    Model.ColorsModel { id: colorsModel }
+    // layout constants
+    readonly property int outerMargin: 16
+    readonly property int vSpacing: 16
 
-    // Confirm dialog instance
+    // External model: model/ColorsModel.qml & Confirm dialog instance
+    Model.ColorsModel { id: colorsModel }
     ConfirmDialog { id: confirmDialog }
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 16
-        spacing: 16
+    Column {
+        anchors.fill: parent.horizontalCenter
+        anchors.margins: outerMargin
+        spacing: vSpacing
 
-        Text {
-            text: "Available Packages to Load"
-            font.pixelSize: 20
-            font.bold: true
-        }
+        Item {
+            width: heading.implicitWidth + 20
+            height: heading.implicitHeight
 
-        GridLayout {
-            anchors.centerIn: parent
-            columns: 3
-            rowSpacing: 12
-            columnSpacing: 12
+            Text {
+                id: heading
 
-            Repeater {
-                model: colorsModel
-
-                Components.ColorTile {
-                    label: model.name
-                    currentColor: model.color
-
-                    onAskToChangeColor: (tile) => {
-                        confirmDialog.targetTile = tile
-                        confirmDialog.open()
-                    }
-                }
+                anchors.centerIn: parent
+                text: "Available Packages to Load"
+                font.pixelSize: 20
+                font.bold: true
             }
         }
     }
+    
+    Grid {
+        id: tiles
+
+        anchors.centerIn: parent      
+        columns: 2
+        rowSpacing: 12
+        columnSpacing: 12
+        horizontalItemAlignment: Grid.AlignHCenter
+        verticalItemAlignment: Grid.AlignVCenter
+
+        Repeater {
+            model: colorsModel
+
+            Components.ColorTile {
+                label: model.name
+                currentColor: model.color
+
+                onAskToChangeColor: (tile) => {
+                    confirmDialog.targetTile = tile
+                    confirmDialog.open()
+                }
+            }
+        }   
+    }
+
+    // 🔒 Prevent shrinking smaller than the grid + heading + margins
+    minimumWidth:  Math.ceil(tiles.implicitWidth)  + 2 * outerMargin
+    minimumHeight: Math.ceil(heading.implicitHeight + vSpacing + tiles.implicitHeight) + 2 * outerMargin
 }
