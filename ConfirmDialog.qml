@@ -3,9 +3,13 @@ import QtQuick.Controls
 
 Dialog {
     id: dlg
-    title: "Confirm"
+    anchors.centerIn: Overlay.overlay
     modal: true
+    title: "Confirm"
     standardButtons: Dialog.Ok | Dialog.Cancel
+
+    // Break the implicit sizing loop by setting a concrete width
+    width: Math.min(420, Overlay.overlay ? Overlay.overlay.width - 80 : 420)
 
     // The tile whose color we will modify
     property Item targetTile: null
